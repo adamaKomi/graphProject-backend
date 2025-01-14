@@ -22,19 +22,27 @@ void on_message(websocketpp::connection_hdl hdl, server::message_ptr msg, server
        else if ((data.find("algorithm") != data.end()) && (data.find("points") != data.end())) {
             auto algorithm = data["algorithm"];
             auto points = data["points"];
-            std::string point_depart = points[0].get<string>();
-            std::string point_arrive = points[1].get<string>();
+
+            std::string point_depart="", point_arrive = "";
+
+            point_depart = points[0].get<string>();
+            if (points.size()>=2) {
+                point_arrive = points[1].get<string>();
+            }
             std::cout << "Points depart 2 : "<< point_depart << std::endl;
             std::cout << "Points fin 2 : " << point_arrive << std::endl;
             if (algorithm == "DIJKSTRA") {
                 std::cout << "(Dijkstra)..." << std::endl;
-                algo.dijkstra(graph, point_depart, s, hdl);
+                algo.dijkstra(graph, point_depart, s, hdl, point_arrive);
             }else if (algorithm == "BFS") {
                 std::cout << "(BFS)..." << std::endl;
-                algo.bfs(graph, point_depart, s, hdl);
+                algo.bfs(graph, point_depart, s, hdl, point_arrive);
             }else if (algorithm == "DFS") {
                 std::cout << "(DFS)..." << std::endl;
-                algo.dfs(graph, point_depart, s, hdl);
+                algo.dfs(graph, point_depart, s, hdl, point_arrive);
+            }if ((algorithm == "A_STAR")&& !point_depart.empty() && !point_arrive.empty()) {
+                std::cout << "(A_STAR)..." << std::endl;
+                algo.a_star(graph, point_depart, s, hdl, point_arrive);
             }
         }
         

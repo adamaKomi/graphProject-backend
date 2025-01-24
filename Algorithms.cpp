@@ -17,11 +17,7 @@ void Algorithms::dijkstra(Graph& graph, const std::string& start, server& ws_ser
 		return;
 	}
 
-	std::cout << "Le nœud de depart " << start << std::endl;
-
-	std::cout << "Le graphe : " << std::endl;
-	graph.printGraph();
-
+	// les structures de traitement de l'algorithme
 	std::unordered_map<std::string, int> distances;
 	std::unordered_map<std::string, bool> visited;
 	std::unordered_map<std::string, std::string> previous;
@@ -35,9 +31,11 @@ void Algorithms::dijkstra(Graph& graph, const std::string& start, server& ws_ser
 	}
 	distances[start] = 0;
 	previous[start] = "";
-	json visitedNodesJson = json::array();  // Initialisation du tableau JSON
-	// Effectuer l'algorithme de Dijkstra
 
+	json visitedNodesJson = json::array();  // Initialisation du tableau JSON
+	json visitedNodesObject = json::object();
+
+	// Effectuer l'algorithme de Dijkstra
 	while (true) {
 		std::string minNode = getMinDistanceNode(list, distances, visited);
 		if (minNode.empty()) break;
@@ -106,8 +104,9 @@ void Algorithms::dijkstra(Graph& graph, const std::string& start, server& ws_ser
 		}
 
 		// Envoyer les nœuds visités au client via WebSocket
+		visitedNodesObject["visitedNodes"] = visitedNodesJson;
 		try {
-			ws_server.send(hdl, visitedNodesJson.dump(), websocketpp::frame::opcode::text);
+			ws_server.send(hdl, visitedNodesObject.dump(), websocketpp::frame::opcode::text);
 		}
 		catch (const std::exception& e) {
 			std::cerr << "Erreur lors de l'envoi des nœuds visités : " << e.what() << std::endl;
@@ -163,6 +162,7 @@ void Algorithms::bfs(const Graph& graph, const string& start, server& ws_server,
 	int it = 0; // Compteur pour numéroter les itérations
 
 	json visitedNodesJson = json::array();  // Initialisation du tableau JSON
+	json visitedNodesObject = json::object();
 
 	// Boucle principale : traiter les nœuds tant que la file n'est pas vide
 	while (!Queue.empty())
@@ -241,8 +241,9 @@ void Algorithms::bfs(const Graph& graph, const string& start, server& ws_server,
 
 
 		// Envoyer les nœuds visités au client via WebSocket
+		visitedNodesObject["visitedNodes"] = visitedNodesJson;
 		try {
-			ws_server.send(hdl, visitedNodesJson.dump(), websocketpp::frame::opcode::text);
+			ws_server.send(hdl, visitedNodesObject.dump(), websocketpp::frame::opcode::text);
 		}
 		catch (const std::exception& e) {
 			std::cerr << "Erreur lors de l'envoi des nœuds visités : " << e.what() << std::endl;
@@ -289,6 +290,7 @@ void Algorithms::dfs(const Graph& graph, const string& start, server& ws_server,
 	//int it = 0; // Pour numéroter les itérations
 
 	json visitedNodesJson = json::array();  // Initialisation du tableau JSON
+	json visitedNodesObject = json::object();
 
 	// Parcours en profondeur
 	while (!Stack.empty()) {
@@ -357,8 +359,9 @@ void Algorithms::dfs(const Graph& graph, const string& start, server& ws_server,
 
 
 		// Envoyer les nœuds visités au client via WebSocket
+		visitedNodesObject["visitedNodes"] = visitedNodesJson;
 		try {
-			ws_server.send(hdl, visitedNodesJson.dump(), websocketpp::frame::opcode::text);
+			ws_server.send(hdl, visitedNodesObject.dump(), websocketpp::frame::opcode::text);
 		}
 		catch (const std::exception& e) {
 			std::cerr << "Erreur lors de l'envoi des nœuds visités : " << e.what() << std::endl;
@@ -415,6 +418,7 @@ void Algorithms::a_star(const Graph& graph, const string& start, server& ws_serv
 
 
 	json visitedNodesJson = json::array();  // Initialisation du tableau JSON
+	json visitedNodesObject = json::object();
 
 	// Boucle principale de l'algorithme A*
 	while (!open_set.empty()) {
@@ -461,8 +465,9 @@ void Algorithms::a_star(const Graph& graph, const string& start, server& ws_serv
 		// ajouter le noeud dans la liste des noeuds visités
 		visitedNodesJson.push_back(current);
 		// Envoyer les nœuds visités au client via WebSocket
+		visitedNodesObject["visitedNodes"] = visitedNodesJson;
 		try {
-			ws_server.send(hdl, visitedNodesJson.dump(), websocketpp::frame::opcode::text);
+			ws_server.send(hdl, visitedNodesObject.dump(), websocketpp::frame::opcode::text);
 		}
 		catch (const std::exception& e) {
 			std::cerr << "Erreur lors de l'envoi des nœuds visités : " << e.what() << std::endl;

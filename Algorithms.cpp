@@ -47,6 +47,7 @@ void Algorithms::dijkstra(Graph& graph, const std::string& start, server& ws_ser
 		if (end == minNode) {
 
 			vector<std::string> path, subPath;
+
 			std::string tmp = minNode;
 
 			json confirmation = json::object();
@@ -55,6 +56,7 @@ void Algorithms::dijkstra(Graph& graph, const std::string& start, server& ws_ser
 			// Envoyer lca confirmation de la fin du chemin
 			try {
 				ws_server.send(hdl, confirmation.dump(), websocketpp::frame::opcode::text);
+				ws_server.get_io_service().poll();  // Forcer l'envoi immédiat
 			}
 			catch (const std::exception& e) {
 				std::cerr << "Erreur lors de la confirmation du chemin trouvé " << e.what() << std::endl;
@@ -80,6 +82,7 @@ void Algorithms::dijkstra(Graph& graph, const std::string& start, server& ws_ser
 				// Envoyer les nœuds visités au client via WebSocket
 				try {
 					ws_server.send(hdl, pathNodes.dump(), websocketpp::frame::opcode::text);
+					ws_server.get_io_service().poll();  // Forcer l'envoi immédiat
 				}
 				catch (const std::exception& e) {
 					std::cerr << "Erreur lors de l'envoi des nœuds du chemin : " << e.what() << std::endl;
@@ -107,6 +110,7 @@ void Algorithms::dijkstra(Graph& graph, const std::string& start, server& ws_ser
 		visitedNodesObject["visitedNodes"] = visitedNodesJson;
 		try {
 			ws_server.send(hdl, visitedNodesObject.dump(), websocketpp::frame::opcode::text);
+			ws_server.get_io_service().poll();  // Forcer l'envoi immédiat
 		}
 		catch (const std::exception& e) {
 			std::cerr << "Erreur lors de l'envoi des nœuds visités : " << e.what() << std::endl;
@@ -183,6 +187,7 @@ void Algorithms::bfs(const Graph& graph, const string& start, server& ws_server,
 			// Envoyer lca confirmation de la fin du chemin
 			try {
 				ws_server.send(hdl, confirmation.dump(), websocketpp::frame::opcode::text);
+				ws_server.get_io_service().poll();  // Forcer l'envoi immédiat
 			}
 			catch (const std::exception& e) {
 				std::cerr << "Erreur lors de la confirmation du chemin trouvé " << e.what() << std::endl;
@@ -208,6 +213,7 @@ void Algorithms::bfs(const Graph& graph, const string& start, server& ws_server,
 				// Envoyer les nœuds qui se trouvent dans le chemin
 				try {
 					ws_server.send(hdl, pathNodes.dump(), websocketpp::frame::opcode::text);
+					ws_server.get_io_service().poll();  // Forcer l'envoi immédiat
 				}
 				catch (const std::exception& e) {
 					std::cerr << "Erreur lors de l'envoi des nœuds visités : " << e.what() << std::endl;
@@ -244,6 +250,7 @@ void Algorithms::bfs(const Graph& graph, const string& start, server& ws_server,
 		visitedNodesObject["visitedNodes"] = visitedNodesJson;
 		try {
 			ws_server.send(hdl, visitedNodesObject.dump(), websocketpp::frame::opcode::text);
+			ws_server.get_io_service().poll();  // Forcer l'envoi immédiat
 		}
 		catch (const std::exception& e) {
 			std::cerr << "Erreur lors de l'envoi des nœuds visités : " << e.what() << std::endl;
@@ -308,6 +315,7 @@ void Algorithms::dfs(const Graph& graph, const string& start, server& ws_server,
 			// Envoyer lca confirmation de la fin du chemin
 			try {
 				ws_server.send(hdl, confirmation.dump(), websocketpp::frame::opcode::text);
+				ws_server.get_io_service().poll();  // Forcer l'envoi immédiat
 			}
 			catch (const std::exception& e) {
 				std::cerr << "Erreur lors de la confirmation du chemin trouvé " << e.what() << std::endl;
@@ -333,6 +341,7 @@ void Algorithms::dfs(const Graph& graph, const string& start, server& ws_server,
 				// Envoyer les nœuds visités au client via WebSocket
 				try {
 					ws_server.send(hdl, pathNodes.dump(), websocketpp::frame::opcode::text);
+					ws_server.get_io_service().poll();  // Forcer l'envoi immédiat
 				}
 				catch (const std::exception& e) {
 					std::cerr << "Erreur lors de l'envoi des nœuds visités : " << e.what() << std::endl;
@@ -362,6 +371,7 @@ void Algorithms::dfs(const Graph& graph, const string& start, server& ws_server,
 		visitedNodesObject["visitedNodes"] = visitedNodesJson;
 		try {
 			ws_server.send(hdl, visitedNodesObject.dump(), websocketpp::frame::opcode::text);
+			ws_server.get_io_service().poll();  // Forcer l'envoi immédiat
 		}
 		catch (const std::exception& e) {
 			std::cerr << "Erreur lors de l'envoi des nœuds visités : " << e.what() << std::endl;
@@ -434,6 +444,7 @@ void Algorithms::a_star(const Graph& graph, const string& start, server& ws_serv
 			// Envoyer lca confirmation de la fin du chemin
 			try {
 				ws_server.send(hdl, confirmation.dump(), websocketpp::frame::opcode::text);
+				ws_server.get_io_service().poll();  // Forcer l'envoi immédiat
 			}
 			catch (const std::exception& e) {
 				std::cerr << "Erreur lors de la confirmation du chemin trouvé " << e.what() << std::endl;
@@ -454,6 +465,7 @@ void Algorithms::a_star(const Graph& graph, const string& start, server& ws_serv
 				// Envoyer les nœuds visités au client via WebSocket
 				try {
 					ws_server.send(hdl, pathNodes.dump(), websocketpp::frame::opcode::text);
+					ws_server.get_io_service().poll();  // Forcer l'envoi immédiat
 				}
 				catch (const std::exception& e) {
 					std::cerr << "Erreur lors de l'envoi des nœuds visités : " << e.what() << std::endl;
@@ -468,6 +480,7 @@ void Algorithms::a_star(const Graph& graph, const string& start, server& ws_serv
 		visitedNodesObject["visitedNodes"] = visitedNodesJson;
 		try {
 			ws_server.send(hdl, visitedNodesObject.dump(), websocketpp::frame::opcode::text);
+			ws_server.get_io_service().poll();  // Forcer l'envoi immédiat
 		}
 		catch (const std::exception& e) {
 			std::cerr << "Erreur lors de l'envoi des nœuds visités : " << e.what() << std::endl;
